@@ -1,6 +1,7 @@
 const { Schema } = require('mongoose');
 
 const note = require('./note.schema');
+const memoPack = require('./memoPack.schema');
 
 const userSchema = new Schema({
   username: {
@@ -22,10 +23,10 @@ const userSchema = new Schema({
     type: [note],
     default: undefined,
   },
-  // memoPacks: {
-  //   type: [memoPack],
-  //   default: undefined,
-  // },
+  memoPacks: {
+    type: [memoPack],
+    default: undefined,
+  },
   // groups: {
   //   type: [group],
   //   default: undefined,

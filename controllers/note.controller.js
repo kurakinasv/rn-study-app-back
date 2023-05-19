@@ -114,7 +114,7 @@ class NoteController {
     try {
       const { toDeleteId } = req.body;
 
-      if (!toDeleteId && typeof toDeleteId === 'string') {
+      if (!toDeleteId || typeof toDeleteId !== 'string') {
         return next(ApiError.badRequest('Некорректный id заметки'));
       }
 
