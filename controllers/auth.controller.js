@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 
 const ApiError = require('../middlewares/error/ApiError');
-const User = require('../models/user');
+const User = require('../models/User');
 
 class AuthController {
   // POST /api/auth/login
@@ -12,36 +12,41 @@ class AuthController {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        next(ApiError.badRequest(`Некорректные данные: ${errors.array()}`));
+        const errorMsgs = errors
+          .array()
+          .map(({ msg }) => msg)
+          .join(', ');
+
+        return next(ApiError.badRequest(`Некорректные данные: ${errorMsgs}`));
       }
 
       const { email, password } = req.body;
 
       if (typeof email !== 'string' || typeof password !== 'string') {
-        next(ApiError.badRequest('Некорректные данные для входа'));
+        return next(ApiError.badRequest('Некорректные данные для входа'));
       }
 
       if (!email.trim() || !password.trim()) {
-        next(ApiError.badRequest('Не заполнены все обязательные поля'));
+        return next(ApiError.badRequest('Не заполнены все обязательные поля'));
       }
 
       const foundUser = await User.findOne({ email });
 
       if (!foundUser) {
-        next(ApiError.badRequest('Пользователь не найден'));
+        return next(ApiError.badRequest('Пользователь не найден'));
       }
 
       const arePasswordsMatch = await bcrypt.compare(password, foundUser.password);
 
       if (!arePasswordsMatch) {
-        next(ApiError.badRequest('Некорректные данные для входа'));
+        return next(ApiError.badRequest('Некорректные данные для входа'));
       }
 
       const token = this._createToken(foundUser.id);
 
       res.json({ userId: foundUser.id, token });
     } catch (error) {
-      next(ApiError.badRequest(error.message));
+      return next(ApiError.badRequest(error.message));
     }
   };
 
@@ -51,43 +56,57 @@ class AuthController {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        next(ApiError.badRequest(`Некорректные данные: ${errors.array()}`));
+        const errorMsgs = errors
+          .array()
+          .map(({ msg }) => msg)
+          .join(', ');
+
+        return next(ApiError.badRequest(`Некорректные данные: ${errorMsgs}`));
       }
 
-      const { email, password, username } = req.body;
+      const { email, password, username, notes, memoPacks, groups } = req.body;
 
       if (typeof email !== 'string' || typeof password !== 'string') {
-        next(ApiError.badRequest('Некорректные данные для входа'));
+        return next(ApiError.badRequest('Некорректные данные для входа'));
       }
 
       if (!email.trim() || !password.trim()) {
-        next(ApiError.badRequest('Не заполнены все обязательные поля'));
+        return next(ApiError.badRequest('Не заполнены все обязательные поля'));
       }
 
       const isExist = await User.findOne({ email });
 
       if (isExist) {
-        next(ApiError.badRequest('Такой пользователь уже существует'));
+        return next(ApiError.badRequest('Такой пользователь уже существует'));
       }
 
-      const hash = await bcrypt.hash(password, 27);
+      const hash = await bcrypt.hash(password, 4);
 
-      const un = username ? username : undefined;
-      const user = await User.create({ email, password: hash, username: un });
+      const notesToAdd = !!notes ? notes : [];
+      const memoPacksToAdd = !!memoPacks ? memoPacks : [];
+      const groupsToAdd = !!groups ? groups : [];
+
+      const user = await User.create({
+        email,
+        password: hash,
+        username,
+        notes: notesToAdd,
+        memoPacks: memoPacksToAdd,
+        groups: groupsToAdd,
+      });
 
       await user.save();
 
-      const token = this._createToken(user.id, is_admin);
+      const token = this._createToken(user.id);
 
-      res.json(`Пользователь создан:\n${user}\n${token}`);
+      res.status(200).json({ message: 'Пользователь создан', data: { user, token } });
     } catch (error) {
-      next(ApiError.badRequest(error.message));
+      return next(ApiError.badRequest(error.message));
     }
   };
 
   _createToken = (userId) => {
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET);
-    return token;
+    return jwt.sign({ userId }, process.env.JWT_SECRET);
   };
 }
 
