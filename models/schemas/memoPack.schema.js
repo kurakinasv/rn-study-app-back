@@ -7,10 +7,10 @@ const memoPackSchema = new Schema({
     type: String,
     required: true,
   },
-  // cards: {
-  //   type: [memoCard],
-  //   default: undefined,
-  // },
+  cards: {
+    type: [memoCard],
+    default: undefined,
+  },
 
   lastRepetition: {
     type: Date,

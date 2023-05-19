@@ -2,6 +2,7 @@ const { Schema } = require('mongoose');
 
 const note = require('./note.schema');
 const memoPack = require('./memoPack.schema');
+const memoCard = require('./memoCard.schema');
 
 const userSchema = new Schema({
   username: {

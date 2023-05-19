@@ -48,7 +48,7 @@ class MemoPackController {
         name: nameToAdd,
         nextRepetition,
         createdAt,
-        cards,
+        cards: !!cards ? cards : [],
         lastRepetition,
         archived,
         group: groupId,
@@ -97,7 +97,7 @@ class MemoPackController {
             : new Date(nextRepetition)
           : toEdit.nextRepetition;
       toEdit.group = groupId || groupId === null ? groupId : toEdit.group;
-      //   toEdit.cards = cards === null ? [] : toEdit.cards
+      toEdit.cards = cards === null ? [] : toEdit.cards;
       toEdit.lastRepetition = !!lastRepetition ? lastRepetition : toEdit.lastRepetition;
       toEdit.archived = archived !== undefined ? archived : toEdit.archived;
 
