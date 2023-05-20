@@ -1,7 +1,6 @@
 const ApiError = require('../middlewares/error/ApiError');
 const User = require('../models/User');
 
-// todo
 class MemoCardController {
   // GET api/memoCard/cards
   getCards = async (req, res, next) => {

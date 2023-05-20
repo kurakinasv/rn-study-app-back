@@ -2,7 +2,7 @@ const { Schema } = require('mongoose');
 
 const note = require('./note.schema');
 const memoPack = require('./memoPack.schema');
-const memoCard = require('./memoCard.schema');
+const group = require('./group.schema');
 
 const userSchema = new Schema({
   username: {
@@ -28,10 +28,10 @@ const userSchema = new Schema({
     type: [memoPack],
     default: undefined,
   },
-  // groups: {
-  //   type: [group],
-  //   default: undefined,
-  // },
+  groups: {
+    type: [group],
+    default: undefined,
+  },
 });
 
 module.exports = userSchema;
