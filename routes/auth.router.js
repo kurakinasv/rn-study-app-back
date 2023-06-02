@@ -2,8 +2,15 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const authController = require('../controllers/auth.controller');
+const authMiddleware = require('../middlewares/auth.middleware');
 
 const router = Router();
+
+// /api/auth/user
+router.get('/user', authMiddleware, authController.getUser);
+
+// /api/auth/editUser
+router.post('/editUser', authMiddleware, authController.editUser);
 
 // /api/auth/login
 router.post(

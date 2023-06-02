@@ -6,6 +6,16 @@ const ApiError = require('../middlewares/error/ApiError');
 const User = require('../models/User');
 
 class AuthController {
+  // GET /api/auth/user
+  getUser = async (req, res, next) => {
+    try {
+      const user = await User.findOne({ _id: req.userId });
+      res.status(200).json(user);
+    } catch (error) {
+      next(ApiError.badRequest('Ошибка при получении данных пользователя'));
+    }
+  };
+
   // POST /api/auth/login
   login = async (req, res, next) => {
     try {
@@ -99,9 +109,30 @@ class AuthController {
 
       const token = this._createToken(user.id);
 
-      res.status(200).json({ message: 'Пользователь создан', data: { user, token } });
+      res.status(200).json({ message: 'Пользователь создан', user, token });
     } catch (error) {
       return next(ApiError.badRequest(error.message));
+    }
+  };
+
+  // POST /api/auth/user
+  editUser = async (req, res, next) => {
+    try {
+      const { username } = req.body;
+
+      const user = await User.findOne({ _id: req.userId });
+
+      if (!user) {
+        return next(ApiError.notFound('Пользователь не найден'));
+      }
+
+      user.username = username.trim();
+
+      await user.save();
+
+      res.status(200).json(user);
+    } catch (error) {
+      next(ApiError.badRequest('Ошибка при изменении данных пользователя'));
     }
   };
 
