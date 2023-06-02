@@ -14,7 +14,7 @@ router.post('/createCard', authMiddleware, memoCardController.createCard);
 // /api/memoCard/editCard
 router.post('/editCard', authMiddleware, memoCardController.editCard);
 
-// /api/memoCard/deleteCard
-router.delete('/deleteCard', authMiddleware, memoCardController.deleteCard);
+// /api/memoCard/deleteCard/:toDeleteId
+router.delete('/deleteCard/:toDeleteId', authMiddleware, memoCardController.deleteCard);
 
 module.exports = router;

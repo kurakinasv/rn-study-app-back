@@ -8,7 +8,7 @@ class MemoCardController {
       const { packId } = req.query;
 
       if (!packId) {
-        next(ApiError.badRequest('Не передан id набора карточек'));
+        return next(ApiError.badRequest('Не передан id набора карточек'));
       }
 
       const user = await User.findOne({ _id: req.userId });
@@ -38,7 +38,7 @@ class MemoCardController {
       const pack = user.memoPacks.id(memoPackId);
 
       if (!pack) {
-        next(ApiError.notFound('Набор карточек по данному id не найден'));
+        return next(ApiError.notFound('Набор карточек по данному id не найден'));
       }
 
       // todo check on correct values
@@ -47,11 +47,11 @@ class MemoCardController {
       const answerToAdd = answer ? answer.trim() : '';
 
       if (!questionToAdd || !answerToAdd) {
-        next(ApiError.badRequest('Поля для вопроса и ответа не могут быть пустыми'));
+        return next(ApiError.badRequest('Поля для вопроса и ответа не могут быть пустыми'));
       }
 
       if (!createdAt || !memoPackId) {
-        next(ApiError.badRequest('Не переданы все обязательные поля'));
+        return next(ApiError.badRequest('Не переданы все обязательные поля'));
       }
 
       const card = {
@@ -95,8 +95,11 @@ class MemoCardController {
       toEdit.state = state !== undefined ? state : toEdit.state;
 
       if (!questionToAdd || !answerToAdd) {
-        next(ApiError.badRequest('Поля для вопроса и ответа не могут быть пустыми'));
+        return next(ApiError.badRequest('Поля для вопроса и ответа не могут быть пустыми'));
       }
+
+      toEdit.question = questionToAdd;
+      toEdit.answer = answerToAdd;
 
       await user.save();
 
@@ -117,7 +120,7 @@ class MemoCardController {
   // DELETE api/memoCard/deleteCard
   deleteCard = async (req, res, next) => {
     try {
-      const { toDeleteId } = req.body;
+      const { toDeleteId } = req.params;
 
       if (!toDeleteId || typeof toDeleteId !== 'string') {
         return next(ApiError.badRequest('Некорректный id карточки'));

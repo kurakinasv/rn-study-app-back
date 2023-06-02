@@ -36,7 +36,7 @@ class NoteController {
       // или когда нет даты создания
       // или когда нет даты обновления
       if ((!contentToAdd && !titleToAdd) || !createdAt || !updatedAt) {
-        next(ApiError.badRequest('Не переданы все обязательные поля'));
+        return next(ApiError.badRequest('Не переданы все обязательные поля'));
       }
 
       // todo check on correct values
@@ -55,7 +55,7 @@ class NoteController {
 
       await user.save();
 
-      res.status(200).json(note);
+      res.status(200).json(user.notes.at(-1));
     } catch (error) {
       next(ApiError.badRequest('Ошибка при создании заметки'));
     }
@@ -71,7 +71,7 @@ class NoteController {
       const { noteId, title, content, nextRepetition, updatedAt, groupId } = req.body;
 
       if (!updatedAt) {
-        next(ApiError.badRequest('Не переданы все обязательные поля'));
+        return next(ApiError.badRequest('Не переданы все обязательные поля'));
       }
 
       // todo check on correct values
@@ -109,10 +109,10 @@ class NoteController {
     }
   };
 
-  // DELETE api/note/deleteNote
+  // DELETE api/note/deleteNote/:toDeleteId
   deleteNote = async (req, res, next) => {
     try {
-      const { toDeleteId } = req.body;
+      const { toDeleteId } = req.params;
 
       if (!toDeleteId || typeof toDeleteId !== 'string') {
         return next(ApiError.badRequest('Некорректный id заметки'));

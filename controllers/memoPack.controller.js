@@ -83,13 +83,11 @@ class MemoPackController {
 
       // todo add to group
 
-      const trimmedName = name.trim();
-
-      if (name !== undefined && !trimmedName) {
+      if (name !== undefined && !name.trim()) {
         return next(ApiError.badRequest('Имя набора не должно быть пустым'));
       }
 
-      toEdit.name = name !== undefined ? trimmedName : toEdit.name;
+      toEdit.name = name !== undefined ? name.trim() : toEdit.name;
       toEdit.nextRepetition =
         nextRepetition !== undefined
           ? nextRepetition === null
@@ -111,10 +109,10 @@ class MemoPackController {
     }
   };
 
-  // DELETE api/memoPack/deleteMemoPack
+  // DELETE api/memoPack/deleteMemoPack/:toDeleteId
   deleteMemoPack = async (req, res, next) => {
     try {
-      const { toDeleteId } = req.body;
+      const { toDeleteId } = req.params;
 
       if (!toDeleteId || typeof toDeleteId !== 'string') {
         return next(ApiError.badRequest('Некорректный id набора'));

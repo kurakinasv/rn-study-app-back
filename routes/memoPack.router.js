@@ -14,7 +14,7 @@ router.post('/createMemoPack', authMiddleware, memoPackController.createMemoPack
 // /api/memoPack/editMemoPack
 router.post('/editMemoPack', authMiddleware, memoPackController.editMemoPack);
 
-// /api/memoPack/deleteMemoPack
-router.delete('/deleteMemoPack', authMiddleware, memoPackController.deleteMemoPack);
+// /api/memoPack/deleteMemoPack/:toDeleteId
+router.delete('/deleteMemoPack/:toDeleteId', authMiddleware, memoPackController.deleteMemoPack);
 
 module.exports = router;

@@ -14,7 +14,7 @@ router.post('/createNote', authMiddleware, noteController.createNote);
 // /api/note/editNote
 router.post('/editNote', authMiddleware, noteController.editNote);
 
-// /api/note/deleteNote
-router.delete('/deleteNote', authMiddleware, noteController.deleteNote);
+// /api/note/deleteNote/:toDeleteId
+router.delete('/deleteNote/:toDeleteId', authMiddleware, noteController.deleteNote);
 
 module.exports = router;

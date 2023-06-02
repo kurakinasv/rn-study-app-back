@@ -56,7 +56,9 @@ class GroupController {
 
       await user.save();
 
-      res.status(200).json(group);
+      const createdGroup = user.groups.at(-1);
+
+      res.status(200).json(createdGroup);
     } catch (error) {
       next(ApiError.badRequest('Ошибка при создании группы'));
     }
@@ -77,7 +79,7 @@ class GroupController {
 
       const nameToAdd = name ? name.trim() : '';
 
-      if (!nameToAdd) {
+      if (!nameToAdd && name !== undefined) {
         return next(ApiError.badRequest('Название группы не может быть пустым'));
       }
 
@@ -105,10 +107,10 @@ class GroupController {
     }
   };
 
-  // DELETE api/group/deleteGroup
+  // DELETE api/group/deleteGroup/:toDeleteId
   deleteGroup = async (req, res, next) => {
     try {
-      const { toDeleteId } = req.body;
+      const { toDeleteId } = req.params;
 
       if (!toDeleteId || typeof toDeleteId !== 'string') {
         return next(ApiError.badRequest('Некорректный id группы'));

@@ -14,7 +14,7 @@ router.post('/createGroup', authMiddleware, groupController.createGroup);
 // /api/group/editGroup
 router.post('/editGroup', authMiddleware, groupController.editGroup);
 
-// /api/group/deleteGroup
-router.delete('/deleteGroup', authMiddleware, groupController.deleteGroup);
+// /api/group/deleteGroup/:toDeleteId
+router.delete('/deleteGroup/:toDeleteId', authMiddleware, groupController.deleteGroup);
 
 module.exports = router;
