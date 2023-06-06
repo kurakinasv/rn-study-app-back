@@ -13,11 +13,7 @@ class MemoCardController {
 
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const { cards } = user.memoPacks.id(packId);
-
-      // todo handle cards from db
 
       res.status(200).json(cards);
     } catch (error) {
@@ -30,9 +26,6 @@ class MemoCardController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
-      // todo add tags
       const { question, answer, state, createdAt, memoPackId } = req.body;
 
       const pack = user.memoPacks.id(memoPackId);
@@ -40,8 +33,6 @@ class MemoCardController {
       if (!pack) {
         return next(ApiError.notFound('Набор карточек по данному id не найден'));
       }
-
-      // todo check on correct values
 
       const questionToAdd = question ? question.trim() : '';
       const answerToAdd = answer ? answer.trim() : '';
@@ -77,11 +68,7 @@ class MemoCardController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const { cardId, question, answer, state } = req.body;
-
-      // todo check on correct values
 
       const packWithCard = user.memoPacks.find((pack) => pack.cards.id(cardId));
       const toEdit = packWithCard.cards.id(cardId);
@@ -117,7 +104,7 @@ class MemoCardController {
     }
   };
 
-  // DELETE api/memoCard/deleteCard
+  // DELETE api/memoCard/deleteCard/:toDeleteId
   deleteCard = async (req, res, next) => {
     try {
       const { toDeleteId } = req.params;
@@ -127,8 +114,6 @@ class MemoCardController {
       }
 
       const user = await User.findOne({ _id: req.userId });
-
-      // todo check if user exist
 
       const packWithCard = user.memoPacks.find((pack) => pack.cards.id(toDeleteId));
 

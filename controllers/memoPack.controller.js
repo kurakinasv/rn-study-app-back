@@ -7,11 +7,7 @@ class MemoPackController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const packs = user.memoPacks;
-
-      // todo handle packs from db
 
       res.status(200).json(packs);
     } catch (error) {
@@ -23,8 +19,6 @@ class MemoPackController {
   createMemoPack = async (req, res, next) => {
     try {
       const user = await User.findOne({ _id: req.userId });
-
-      // todo check if user exist
 
       const { name, cards, lastRepetition, nextRepetition, createdAt, archived, groupId } =
         req.body;
@@ -40,9 +34,6 @@ class MemoPackController {
       if (isExist !== -1) {
         next(ApiError.badRequest('Набор с таким именем уже существует'));
       }
-
-      // todo check on correct values
-      // todo add to group
 
       const memoPack = {
         name: nameToAdd,
@@ -69,19 +60,13 @@ class MemoPackController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const { packId, name, cards, lastRepetition, nextRepetition, archived, groupId } = req.body;
-
-      // todo check on correct values
 
       const toEdit = user.memoPacks.id(packId);
 
       if (!toEdit) {
         return next(ApiError.notFound('Набор по указанному id не найден'));
       }
-
-      // todo add to group
 
       if (name !== undefined && !name.trim()) {
         return next(ApiError.badRequest('Имя набора не должно быть пустым'));
@@ -119,8 +104,6 @@ class MemoPackController {
       }
 
       const user = await User.findOne({ _id: req.userId });
-
-      // todo check if user exist
 
       const packToDelete = user.memoPacks.id(toDeleteId);
 

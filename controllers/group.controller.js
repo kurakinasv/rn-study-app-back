@@ -7,11 +7,7 @@ class GroupController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const groups = user.groups;
-
-      // todo handle packs from db
 
       res.status(200).json(groups);
     } catch (error) {
@@ -24,8 +20,6 @@ class GroupController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const { name, memoPacks, notes, deadline, createdAt, archived } = req.body;
 
       if (!createdAt) {
@@ -37,8 +31,6 @@ class GroupController {
       if (!nameToAdd) {
         return next(ApiError.badRequest('Название группы не может быть пустым'));
       }
-
-      // todo check on correct values
 
       const memoPacksToAdd = !!memoPacks ? memoPacks : [];
       const notesdToAdd = !!notes ? notes : [];
@@ -69,8 +61,6 @@ class GroupController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const { groupId, name, notes, memoPacks, deadline, archived } = req.body;
 
       if (!groupId || typeof groupId !== 'string') {
@@ -82,8 +72,6 @@ class GroupController {
       if (!nameToAdd && name !== undefined) {
         return next(ApiError.badRequest('Название группы не может быть пустым'));
       }
-
-      // todo check on correct values
 
       const toEdit = user.groups.id(groupId);
 
@@ -117,8 +105,6 @@ class GroupController {
       }
 
       const user = await User.findOne({ _id: req.userId });
-
-      // todo check if user exist
 
       const groupToDelete = user.groups.id(toDeleteId);
 

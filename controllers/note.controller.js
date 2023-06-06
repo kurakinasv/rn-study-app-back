@@ -7,12 +7,7 @@ class NoteController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const notes = user.notes;
-
-      // todo handle notes from db
-      console.log('notes', notes);
 
       res.status(200).json(notes);
     } catch (error) {
@@ -25,8 +20,6 @@ class NoteController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const { title, content, nextRepetition, createdAt, updatedAt, groupId } = req.body;
 
       const titleToAdd = title ? title.trim() : '';
@@ -38,9 +31,6 @@ class NoteController {
       if ((!contentToAdd && !titleToAdd) || !createdAt || !updatedAt) {
         return next(ApiError.badRequest('Не переданы все обязательные поля'));
       }
-
-      // todo check on correct values
-      // todo add to group
 
       const note = {
         title: titleToAdd,
@@ -66,15 +56,11 @@ class NoteController {
     try {
       const user = await User.findOne({ _id: req.userId });
 
-      // todo check if user exist
-
       const { noteId, title, content, nextRepetition, updatedAt, groupId } = req.body;
 
       if (!updatedAt) {
         return next(ApiError.badRequest('Не переданы все обязательные поля'));
       }
-
-      // todo check on correct values
 
       const toEdit = user.notes.id(noteId);
 
@@ -82,15 +68,8 @@ class NoteController {
         return next(ApiError.notFound('Заметка по указанному id не найдена'));
       }
 
-      // todo add to group
-
       toEdit.title = title !== undefined ? title.trim() : toEdit.title;
       toEdit.content = content !== undefined ? content.trim() : toEdit.content;
-
-      if (toEdit.content === '' && toEdit.title === '') {
-        // todo delete note
-      }
-
       toEdit.nextRepetition =
         nextRepetition !== undefined
           ? nextRepetition === null
@@ -119,8 +98,6 @@ class NoteController {
       }
 
       const user = await User.findOne({ _id: req.userId });
-
-      // todo check if user exist
 
       const noteToDelete = user.notes.id(toDeleteId);
 
